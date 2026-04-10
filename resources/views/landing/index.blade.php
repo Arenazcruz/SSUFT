@@ -18,16 +18,16 @@
 
                 <div class="mt-10 grid gap-4 md:grid-cols-3">
                     <div class="rounded-[24px] bg-[var(--brand-50)] p-5">
-                        <p class="text-3xl font-semibold text-[#111111]">{{ $stats['usuarios'] }}</p>
-                        <p class="mt-2 text-sm text-slate-500">Usuarios institucionales</p>
+                        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-orange-700">Acceso seguro</p>
+                        <p class="mt-3 text-sm leading-7 text-slate-600">Ingreso exclusivo con correo institucional y validación centralizada.</p>
                     </div>
                     <div class="rounded-[24px] bg-white p-5 ring-1 ring-slate-100">
-                        <p class="text-3xl font-semibold text-[#111111]">{{ $stats['reuniones'] }}</p>
-                        <p class="mt-2 text-sm text-slate-500">Clases y reuniones</p>
+                        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-orange-700">Operación académica</p>
+                        <p class="mt-3 text-sm leading-7 text-slate-600">Sesiones en vivo, agenda académica y continuidad del aprendizaje en un solo entorno.</p>
                     </div>
                     <div class="rounded-[24px] bg-white p-5 ring-1 ring-slate-100">
-                        <p class="text-3xl font-semibold text-[#111111]">{{ $stats['grabaciones'] }}</p>
-                        <p class="mt-2 text-sm text-slate-500">Grabaciones publicadas</p>
+                        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-orange-700">Gestión institucional</p>
+                        <p class="mt-3 text-sm leading-7 text-slate-600">Control operativo para supervisar accesos, sesiones y disponibilidad del servicio.</p>
                     </div>
                 </div>
             </div>
@@ -35,32 +35,25 @@
             <div class="hero-card">
                 <div class="flex items-start justify-between">
                     <div>
-                        <p class="text-sm uppercase tracking-[0.24em] text-orange-100/80">Vista destacada</p>
-                        <h2 class="mt-3 text-3xl font-semibold">Inicio de transmisiones</h2>
+                        <p class="text-sm uppercase tracking-[0.24em] text-orange-100/80">Qué hace el sistema</p>
+                        <h2 class="mt-3 text-3xl font-semibold">Infraestructura digital para docencia en tiempo real</h2>
                     </div>
                     <span class="rounded-full border border-white/15 px-4 py-2 text-xs uppercase tracking-[0.24em] text-orange-100/80">Cerrado</span>
                 </div>
 
                 <div class="mt-8 space-y-4">
-                    @forelse ($featuredMeetings as $meeting)
-                        <article class="rounded-[28px] border border-white/10 bg-white/10 p-5 backdrop-blur">
-                            <div class="flex items-start justify-between gap-4">
-                                <div>
-                                    <x-status-badge :status="$meeting->estado" class="border-white/15 bg-white/10 text-white" />
-                                    <h3 class="mt-4 text-xl font-semibold">{{ $meeting->title }}</h3>
-                                    <p class="mt-2 text-sm text-white/70">{{ $meeting->docente?->name }}</p>
-                                </div>
-                                <div class="rounded-2xl bg-white/10 px-4 py-3 text-right text-sm">
-                                    <p>{{ optional($meeting->scheduled_at)->format('d M') }}</p>
-                                    <p class="text-white/65">{{ optional($meeting->scheduled_at)->format('H:i') }}</p>
-                                </div>
-                            </div>
-                        </article>
-                    @empty
-                        <div class="rounded-[28px] border border-white/10 bg-white/10 p-6 text-sm text-white/70">
-                            No hay clases destacadas todavía. Ejecuta los seeders para poblar el panel inicial.
-                        </div>
-                    @endforelse
+                    <article class="rounded-[28px] border border-white/10 bg-white/10 p-5 backdrop-blur">
+                        <p class="text-sm font-semibold text-orange-100">Autenticación institucional</p>
+                        <p class="mt-3 text-sm leading-7 text-white/75">El sistema restringe el acceso a identidades autorizadas de UNIFRANZ y mantiene la experiencia dentro de un entorno cerrado.</p>
+                    </article>
+                    <article class="rounded-[28px] border border-white/10 bg-white/10 p-5 backdrop-blur">
+                        <p class="text-sm font-semibold text-orange-100">Experiencia de transmisión académica</p>
+                        <p class="mt-3 text-sm leading-7 text-white/75">Centraliza clases en vivo, sesiones programadas y continuidad de contenidos con una interfaz orientada a la docencia.</p>
+                    </article>
+                    <article class="rounded-[28px] border border-white/10 bg-white/10 p-5 backdrop-blur">
+                        <p class="text-sm font-semibold text-orange-100">Gobierno y trazabilidad</p>
+                        <p class="mt-3 text-sm leading-7 text-white/75">Permite administrar accesos, supervisar sesiones y sostener una operación universitaria consistente y controlada.</p>
+                    </article>
                 </div>
             </div>
         </div>
@@ -83,14 +76,14 @@
                     <p class="mt-3 text-sm leading-7 text-slate-500">Validación en frontend y backend para restringir ingresos a cuentas institucionales activas.</p>
                 </article>
                 <article class="surface-panel p-7">
-                    <p class="text-sm font-semibold text-orange-600">Paneles por rol</p>
-                    <h3 class="mt-3 text-2xl font-semibold">Docente, estudiante y admin</h3>
-                    <p class="mt-3 text-sm leading-7 text-slate-500">Cada perfil recibe una experiencia orientada a su tarea real dentro del ecosistema universitario.</p>
+                    <p class="text-sm font-semibold text-orange-600">Continuidad académica</p>
+                    <h3 class="mt-3 text-2xl font-semibold">Clases en vivo y seguimiento</h3>
+                    <p class="mt-3 text-sm leading-7 text-slate-500">La plataforma organiza transmisión, programación y revisión posterior dentro de un flujo académico continuo.</p>
                 </article>
                 <article class="surface-panel p-7">
-                    <p class="text-sm font-semibold text-orange-600">Ecosistema de clases</p>
-                    <h3 class="mt-3 text-2xl font-semibold">Live, agenda y grabaciones</h3>
-                    <p class="mt-3 text-sm leading-7 text-slate-500">La plataforma organiza sesiones activas, programadas y finalizadas con continuidad entre formatos.</p>
+                    <p class="text-sm font-semibold text-orange-600">Control operativo</p>
+                    <h3 class="mt-3 text-2xl font-semibold">Gestión y supervisión</h3>
+                    <p class="mt-3 text-sm leading-7 text-slate-500">La operación del sistema mantiene control de acceso, sesiones, disponibilidad y orden institucional.</p>
                 </article>
             </div>
         </div>
@@ -108,7 +101,7 @@
                     </div>
                     <div class="rounded-[24px] border border-white/10 bg-white/5 p-5">
                         <p class="text-sm font-semibold">2. Gestión o consumo</p>
-                        <p class="mt-2 text-sm text-white/70">Docentes programan y gestionan clases. Estudiantes exploran sesiones y grabaciones.</p>
+                        <p class="mt-2 text-sm text-white/70">El entorno organiza sesiones académicas, acceso a contenidos y continuidad entre clases activas y materiales disponibles.</p>
                     </div>
                     <div class="rounded-[24px] border border-white/10 bg-white/5 p-5">
                         <p class="text-sm font-semibold">3. Supervisión institucional</p>

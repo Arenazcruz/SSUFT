@@ -7,6 +7,8 @@ use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -43,6 +45,21 @@ class UserController extends Controller
         $user->save();
 
         return back()->with('success', 'Usuario actualizado correctamente.');
+    }
+
+    public function destroy(Request $request, User $user): RedirectResponse
+    {
+        if ($request->user()->is($user)) {
+            return back()->withErrors([
+                'admin_user' => 'No puedes eliminar tu propia cuenta.',
+            ]);
+        }
+
+        DB::table('sessions')->where('user_id', $user->id)->delete();
+
+        $user->delete();
+
+        return back()->with('success', 'Usuario eliminado correctamente.');
     }
 
     private function avatarPalette(): array

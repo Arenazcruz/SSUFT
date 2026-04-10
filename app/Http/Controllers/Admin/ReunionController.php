@@ -36,4 +36,11 @@ class ReunionController extends Controller
 
         return back()->with('success', 'Reunión actualizada correctamente.');
     }
+
+    public function destroy(Reunion $reunion): RedirectResponse
+    {
+        $reunion->delete();
+
+        return back()->with('success', 'Reunion eliminada correctamente.');
+    }
 }

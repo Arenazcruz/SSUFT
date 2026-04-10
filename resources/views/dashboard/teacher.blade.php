@@ -90,6 +90,12 @@
                                             <button type="submit" class="btn-secondary">Finalizar</button>
                                         </form>
                                     @endif
+                                    <form action="{{ route('teacher.reuniones.destroy', $meeting) }}" method="POST"
+                                        onsubmit="return confirm('Se eliminara esta reunion y sus registros asociados. Continuar?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn-danger">Eliminar</button>
+                                    </form>
                                 </div>
                             </div>
                         </article>

@@ -41,12 +41,15 @@ Route::middleware('auth')->group(function (): void {
         Route::get('/docente/dashboard', [TeacherDashboardController::class, 'index'])->name('teacher.dashboard');
         Route::post('/docente/reuniones', [TeacherReunionController::class, 'store'])->name('teacher.reuniones.store');
         Route::patch('/docente/reuniones/{reunion}', [TeacherReunionController::class, 'update'])->name('teacher.reuniones.update');
+        Route::delete('/docente/reuniones/{reunion}', [TeacherReunionController::class, 'destroy'])->name('teacher.reuniones.destroy');
     });
 
     Route::middleware('role:administrador')->group(function (): void {
         Route::get('/administrador/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
         Route::post('/administrador/usuarios', [AdminUserController::class, 'store'])->name('admin.users.store');
         Route::patch('/administrador/usuarios/{user}', [AdminUserController::class, 'update'])->name('admin.users.update');
+        Route::delete('/administrador/usuarios/{user}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
         Route::patch('/administrador/reuniones/{reunion}', [AdminReunionController::class, 'update'])->name('admin.reuniones.update');
+        Route::delete('/administrador/reuniones/{reunion}', [AdminReunionController::class, 'destroy'])->name('admin.reuniones.destroy');
     });
 });

@@ -26,7 +26,7 @@
     ];
 @endphp
 
-<div class="relative min-h-screen overflow-hidden">
+<div class="relative min-h-screen">
     <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,124,0,0.12),transparent_25%)]"></div>
 
     @if ($public)

@@ -7,6 +7,7 @@ use App\Http\Requests\Teacher\StoreReunionRequest;
 use App\Http\Requests\Teacher\UpdateReunionStatusRequest;
 use App\Models\Reunion;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class ReunionController extends Controller
@@ -61,5 +62,14 @@ class ReunionController extends Controller
         $reunion->update($payload);
 
         return back()->with('success', 'El estado de la clase fue actualizado.');
+    }
+
+    public function destroy(Request $request, Reunion $reunion): RedirectResponse
+    {
+        abort_unless($reunion->docente_id === $request->user()->id, 403);
+
+        $reunion->delete();
+
+        return back()->with('success', 'La reunion fue eliminada correctamente.');
     }
 }
