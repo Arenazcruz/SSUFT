@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReunionController;
 use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\Teacher\ReunionController as TeacherReunionController;
@@ -32,6 +33,10 @@ Route::middleware('auth')->group(function (): void {
 
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/reuniones/{reunion}', [ReunionController::class, 'show'])->name('reuniones.show');
+    Route::get('/perfil', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/perfil/foto', [ProfileController::class, 'photo'])->name('profile.photo');
+    Route::get('/usuarios/{user}/foto', [ProfileController::class, 'userPhoto'])->name('users.photo');
+    Route::patch('/perfil', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::middleware('role:estudiante')->group(function (): void {
         Route::get('/estudiante/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');

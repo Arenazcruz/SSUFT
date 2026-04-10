@@ -327,6 +327,9 @@
                         @php
                             $userDeleteFormId = 'user-delete-' . $managedUser->id;
                             $isCurrentUser = auth()->id() === $managedUser->id;
+                            $managedUserPhotoUrl = $managedUser->foto_perfil
+                                ? route('users.photo', ['user' => $managedUser->id, 'v' => optional($managedUser->updated_at)->timestamp])
+                                : null;
                         @endphp
                         <form action="{{ route('admin.users.update', $managedUser) }}" method="POST"
                             class="admin-dashboard-user-card"
@@ -336,10 +339,15 @@
                             @method('PATCH')
 
                             <div class="admin-dashboard-user-identity">
-                                <span class="admin-dashboard-user-avatar"
-                                    style="background-color: {{ $managedUser->avatar_color ?? '#F57C00' }}">
-                                    {{ strtoupper(substr($managedUser->name, 0, 2)) }}
-                                </span>
+                                @if ($managedUserPhotoUrl)
+                                    <img src="{{ $managedUserPhotoUrl }}" alt="Foto de {{ $managedUser->name }}"
+                                        class="admin-dashboard-user-avatar border border-slate-200 object-cover">
+                                @else
+                                    <span class="admin-dashboard-user-avatar"
+                                        style="background-color: {{ $managedUser->avatar_color ?? '#F57C00' }}">
+                                        {{ strtoupper(substr($managedUser->name, 0, 2)) }}
+                                    </span>
+                                @endif
                                 <div>
                                     <h3>{{ $managedUser->name }}</h3>
                                     <p>{{ $managedUser->email }}</p>

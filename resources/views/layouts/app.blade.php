@@ -14,6 +14,9 @@
     $public = $public ?? false;
     $user = auth()->user();
     $role = $user?->role?->slug;
+    $profilePhotoUrl = $user?->foto_perfil
+        ? route('profile.photo', ['v' => optional($user->updated_at)->timestamp])
+        : null;
     $dashboardRoute = match ($role) {
         'administrador' => 'admin.dashboard',
         'docente' => 'teacher.dashboard',
@@ -82,15 +85,19 @@
 
                 <div class="mt-auto rounded-[28px] border border-dashed border-slate-300/80 p-5">
                     <p class="text-xs uppercase tracking-[0.25em] text-slate-400">Cuenta</p>
-                    <div class="mt-4 flex items-center gap-3">
-                        <span class="flex h-11 w-11 items-center justify-center rounded-2xl text-sm font-bold text-white" style="background-color: {{ $user?->avatar_color ?? '#F57C00' }}">
-                            {{ strtoupper(substr($user?->name ?? 'UF', 0, 2)) }}
-                        </span>
+                    <a href="{{ route('profile.edit') }}" class="mt-4 flex items-center gap-3 rounded-2xl px-2 py-2 transition hover:bg-white hover:shadow-sm">
+                        @if ($profilePhotoUrl)
+                            <img src="{{ $profilePhotoUrl }}" alt="Foto de perfil" class="h-11 w-11 rounded-2xl border border-white object-cover">
+                        @else
+                            <span class="flex h-11 w-11 items-center justify-center rounded-2xl text-sm font-bold text-white" style="background-color: {{ $user?->avatar_color ?? '#F57C00' }}">
+                                {{ strtoupper(substr($user?->name ?? 'UF', 0, 2)) }}
+                            </span>
+                        @endif
                         <div>
                             <p class="font-semibold text-slate-900">{{ $user?->name }}</p>
                             <p class="text-sm text-slate-500">{{ $user?->email }}</p>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </aside>
 
