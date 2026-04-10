@@ -6,6 +6,93 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Sora', ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+    --brand-50: #fff7ed;
+    --brand-500: #f57c00;
+    --brand-600: #ea580c;
+    --ink-950: #111111;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        min-height: 100vh;
+        color: var(--ink-950);
+        background:
+            radial-gradient(circle at top left, rgba(245, 124, 0, 0.18), transparent 28%),
+            radial-gradient(circle at bottom right, rgba(17, 17, 17, 0.08), transparent 24%),
+            linear-gradient(180deg, #fffdfa 0%, #f4efe8 100%);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        font-family: var(--font-display);
+    }
+}
+
+@layer components {
+    .surface-panel {
+        @apply rounded-[28px] border border-white/60 bg-white/80 shadow-[0_24px_80px_rgba(17,17,17,0.08)] backdrop-blur-xl;
+    }
+
+    .surface-dark {
+        @apply rounded-[28px] border border-white/10 bg-[#111111] text-white shadow-[0_24px_80px_rgba(17,17,17,0.28)];
+    }
+
+    .eyebrow {
+        @apply inline-flex items-center rounded-full border border-orange-200 bg-orange-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-orange-700;
+    }
+
+    .section-heading {
+        @apply text-3xl font-semibold tracking-tight text-[#111111] md:text-4xl;
+    }
+
+    .field-label {
+        @apply mb-2 block text-sm font-semibold text-slate-700;
+    }
+
+    .field-input {
+        @apply w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-100;
+    }
+
+    .field-select {
+        @apply w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-100;
+    }
+
+    .btn-primary {
+        @apply inline-flex items-center justify-center rounded-full bg-[#f57c00] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#dd6f00];
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-800 transition hover:border-orange-200 hover:text-orange-700;
+    }
+
+    .btn-ghost {
+        @apply inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10;
+    }
+
+    .metric-card {
+        @apply rounded-[28px] border border-white/60 bg-white/80 p-6 shadow-[0_24px_80px_rgba(17,17,17,0.08)] backdrop-blur-xl;
+    }
+
+    .sidebar-link {
+        @apply flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-white hover:text-slate-900;
+    }
+
+    .sidebar-link-active {
+        @apply bg-white text-slate-950 shadow-sm ring-1 ring-orange-100;
+    }
+
+    .hero-card {
+        @apply overflow-hidden rounded-[32px] border border-white/60 bg-gradient-to-br from-[#111111] via-[#1f1f1f] to-[#f57c00] p-8 text-white shadow-[0_30px_90px_rgba(17,17,17,0.26)];
+    }
 }
