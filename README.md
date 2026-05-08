@@ -22,6 +22,49 @@ Asegurate de tener instalado:
 - PostgreSQL 14+ (recomendado 16+)
 - Extension PHP `pdo_pgsql` habilitada
 
+## Ejecucion con Docker
+
+1. Crear archivo de entorno para Docker:
+
+```powershell
+Copy-Item .env.docker.example .env
+```
+
+2. Construir y levantar contenedores:
+
+```bash
+docker compose up --build -d
+```
+
+3. Generar clave de aplicacion:
+
+```bash
+docker compose exec app php artisan key:generate
+```
+
+4. Ejecutar migraciones:
+
+```bash
+docker compose exec app php artisan migrate
+```
+
+La app quedara disponible en:
+
+- `http://localhost:8000`
+
+Comandos utiles en Docker:
+
+```bash
+# Instalar dependencias frontend
+docker compose exec app npm install
+
+# Levantar Vite en modo desarrollo
+docker compose exec app npm run dev -- --host 0.0.0.0 --port 5173
+
+# Ejecutar pruebas
+docker compose exec app php artisan test
+```
+
 ## Instalacion del proyecto
 
 1. Clonar repositorio:
