@@ -1,43 +1,43 @@
 @extends('layouts.app', [
-    'title' => 'Dashboard administrador | UNIFRANZ Stream',
-    'eyebrow' => 'Panel administrador',
-    'pageTitle' => 'Gobierno institucional de la plataforma',
-    'pageDescription' => 'Administra usuarios, roles, reuniones y capacidad operativa del ecosistema.',
+    'title' => 'Dashboard superadministrador | UNIFRANZ Stream',
+    'eyebrow' => 'Panel superadministrador',
+    'pageTitle' => 'Centro de gobierno total',
+    'pageDescription' => 'Supervisa toda la plataforma y administra cuentas operativas por rol.',
 ])
 
 @php
-    $meetingTotal = $meetings->count();
-    $meetingScheduled = $meetings->where('estado', 'programada')->count();
-    $meetingLive = $meetings->where('estado', 'en_vivo')->count();
-    $meetingFinished = $meetings->where('estado', 'finalizada')->count();
-    $activeUsers = $users->where('activo', true)->count();
-    $inactiveUsers = $users->where('activo', false)->count();
+    $meetingScheduled = $metrics['reuniones_programadas'];
+    $meetingLive = $metrics['reuniones_live'];
+    $meetingFinished = $metrics['reuniones_finalizadas'];
 @endphp
 
 @section('content')
     <div class="admin-dashboard-shell" data-admin-dashboard>
         <section class="admin-dashboard-hero surface-dark" data-dashboard-panel>
             <div class="admin-dashboard-hero-copy">
-                <p class="admin-dashboard-kicker">Centro de control</p>
-                <h2 class="admin-dashboard-hero-title">Operacion academica, usuarios y clases en una sola vista.</h2>
+                <p class="admin-dashboard-kicker">Gobierno global</p>
+                <h2 class="admin-dashboard-hero-title">Visión total de operación, usuarios y clases académicas.</h2>
                 <p class="admin-dashboard-hero-text">
-                    Supervisa el flujo institucional, filtra reuniones por estado y ajusta cuentas sin salir del panel.
+                    Consolida control institucional sobre administradores, docentes y estudiantes, con lectura transversal
+                    del estado operativo en tiempo real.
                 </p>
 
                 <div class="admin-dashboard-highlight-grid">
                     <article class="admin-dashboard-highlight-card">
-                        <span class="admin-dashboard-highlight-label">Usuarios activos</span>
-                        <strong>{{ $activeUsers }}</strong>
+                        <span class="admin-dashboard-highlight-label">Superadministradores</span>
+                        <strong>{{ $metrics['superadmins'] }}</strong>
                     </article>
-
                     <article class="admin-dashboard-highlight-card">
-                        <span class="admin-dashboard-highlight-label">Clases en vivo</span>
-                        <strong>{{ $meetingLive }}</strong>
+                        <span class="admin-dashboard-highlight-label">Administradores</span>
+                        <strong>{{ $metrics['admins'] }}</strong>
                     </article>
-
                     <article class="admin-dashboard-highlight-card">
-                        <span class="admin-dashboard-highlight-label">Reuniones programadas</span>
-                        <strong>{{ $meetingScheduled }}</strong>
+                        <span class="admin-dashboard-highlight-label">Docentes</span>
+                        <strong>{{ $metrics['docentes'] }}</strong>
+                    </article>
+                    <article class="admin-dashboard-highlight-card">
+                        <span class="admin-dashboard-highlight-label">Estudiantes</span>
+                        <strong>{{ $metrics['estudiantes'] }}</strong>
                     </article>
                 </div>
             </div>
@@ -45,19 +45,19 @@
             <div class="admin-dashboard-hero-side">
                 <div class="admin-dashboard-orbit">
                     <div class="admin-dashboard-orbit-core">
-                        <span>Capacidad</span>
-                        <strong>{{ $metrics['usuarios'] + $metrics['reuniones'] }}</strong>
+                        <span>Usuarios</span>
+                        <strong>{{ $metrics['usuarios_total'] }}</strong>
                     </div>
                 </div>
 
                 <div class="admin-dashboard-mini-stats">
                     <article>
-                        <span>Grabaciones</span>
-                        <strong>{{ $metrics['grabaciones'] }}</strong>
+                        <span>Activos</span>
+                        <strong>{{ $metrics['usuarios_activos'] }}</strong>
                     </article>
                     <article>
-                        <span>Inactivas</span>
-                        <strong>{{ $inactiveUsers }}</strong>
+                        <span>Grabaciones</span>
+                        <strong>{{ $metrics['grabaciones'] }}</strong>
                     </article>
                 </div>
             </div>
@@ -66,33 +66,33 @@
         <section class="surface-panel admin-dashboard-panel admin-dashboard-summary-band" data-dashboard-panel>
             <div class="admin-dashboard-summary-band-head">
                 <div>
-                    <p class="admin-dashboard-kicker admin-dashboard-kicker-light">Resumen operativo</p>
-                    <h2 class="admin-dashboard-section-title">Lectura rapida del sistema</h2>
+                    <p class="admin-dashboard-kicker admin-dashboard-kicker-light">Estado plataforma</p>
+                    <h2 class="admin-dashboard-section-title">Lectura ejecutiva operativa</h2>
                 </div>
                 <p class="admin-dashboard-summary-band-text">
-                    Estado sintetico del sistema para revisar acceso, actividad y capacidad operativa sin bajar al resto
-                    del panel.
+                    Métricas clave para detectar cuellos de botella, evaluar salud del sistema y ajustar decisiones de
+                    administración institucional.
                 </p>
             </div>
 
             <div class="admin-dashboard-summary-band-body">
                 <div class="admin-dashboard-summary-stack admin-dashboard-summary-stack-horizontal">
                     <article class="admin-dashboard-summary-card">
-                        <span>Acceso</span>
-                        <strong>{{ $activeUsers }}/{{ $users->count() }}</strong>
-                        <p>Cuentas activas respecto al total institucional.</p>
+                        <span>Cuenta activa</span>
+                        <strong>{{ $metrics['usuarios_activos'] }}/{{ $metrics['usuarios_total'] }}</strong>
+                        <p>Relación de usuarios habilitados respecto al total registrado.</p>
                     </article>
 
                     <article class="admin-dashboard-summary-card">
-                        <span>Actividad</span>
+                        <span>Clases en vivo</span>
                         <strong>{{ $meetingLive }}</strong>
-                        <p>Clases que requieren observacion inmediata.</p>
+                        <p>Sesiones que requieren seguimiento inmediato.</p>
                     </article>
 
                     <article class="admin-dashboard-summary-card">
-                        <span>Pipeline</span>
+                        <span>Pendientes</span>
                         <strong>{{ $meetingScheduled }}</strong>
-                        <p>Sesiones pendientes de ejecucion en agenda.</p>
+                        <p>Reuniones programadas por iniciar.</p>
                     </article>
                 </div>
 
@@ -100,24 +100,24 @@
                     <article>
                         <span class="admin-dashboard-timeline-dot"></span>
                         <div>
-                            <strong>Prioridad alta</strong>
-                            <p>Validar reuniones en vivo y docentes asignados.</p>
+                            <strong>Gobierno de cuentas</strong>
+                            <p>Administra roles críticos sin afectar cuentas de superadministración.</p>
                         </div>
                     </article>
 
                     <article>
                         <span class="admin-dashboard-timeline-dot"></span>
                         <div>
-                            <strong>Prioridad media</strong>
-                            <p>Revisar cuentas inactivas y roles con baja cobertura.</p>
+                            <strong>Operación académica</strong>
+                            <p>Monitorea estado de clases programadas, en vivo y finalizadas.</p>
                         </div>
                     </article>
 
                     <article>
                         <span class="admin-dashboard-timeline-dot"></span>
                         <div>
-                            <strong>Prioridad estable</strong>
-                            <p>Monitorear el crecimiento de grabaciones publicadas.</p>
+                            <strong>Continuidad</strong>
+                            <p>Controla el crecimiento del repositorio de grabaciones.</p>
                         </div>
                     </article>
                 </div>
@@ -127,26 +127,26 @@
         <section class="admin-dashboard-metrics" data-dashboard-panel>
             <article class="admin-dashboard-metric-card">
                 <span class="admin-dashboard-metric-label">Usuarios</span>
-                <strong>{{ $metrics['usuarios'] }}</strong>
-                <p>Base total de cuentas institucionales.</p>
+                <strong>{{ $metrics['usuarios_total'] }}</strong>
+                <p>Total institucional de cuentas registradas.</p>
+            </article>
+
+            <article class="admin-dashboard-metric-card">
+                <span class="admin-dashboard-metric-label">Inactivos</span>
+                <strong>{{ $metrics['usuarios_inactivos'] }}</strong>
+                <p>Cuentas que requieren revisión o reactivación.</p>
             </article>
 
             <article class="admin-dashboard-metric-card">
                 <span class="admin-dashboard-metric-label">Reuniones</span>
-                <strong>{{ $metrics['reuniones'] }}</strong>
-                <p>Clases registradas dentro del sistema.</p>
+                <strong>{{ $metrics['reuniones_total'] }}</strong>
+                <p>Sesiones académicas registradas en todo el ecosistema.</p>
             </article>
 
             <article class="admin-dashboard-metric-card">
-                <span class="admin-dashboard-metric-label">Grabaciones</span>
-                <strong>{{ $metrics['grabaciones'] }}</strong>
-                <p>Contenido disponible para consulta posterior.</p>
-            </article>
-
-            <article class="admin-dashboard-metric-card">
-                <span class="admin-dashboard-metric-label">En vivo</span>
-                <strong>{{ $metrics['live'] }}</strong>
-                <p>Actividad concurrente monitoreada ahora.</p>
+                <span class="admin-dashboard-metric-label">Finalizadas</span>
+                <strong>{{ $meetingFinished }}</strong>
+                <p>Clases cerradas listas para seguimiento histórico.</p>
             </article>
         </section>
 
@@ -155,31 +155,30 @@
                 <section class="surface-panel admin-dashboard-panel" data-dashboard-panel>
                     <div class="admin-dashboard-panel-head">
                         <div>
-                            <p class="admin-dashboard-kicker admin-dashboard-kicker-light">Crear usuario</p>
-                            <h2 class="admin-dashboard-section-title">Alta institucional</h2>
+                            <p class="admin-dashboard-kicker admin-dashboard-kicker-light">Alta transversal</p>
+                            <h2 class="admin-dashboard-section-title">Crear usuario operativo</h2>
                         </div>
                     </div>
 
-                    <form action="{{ route('admin.users.store') }}" method="POST" class="admin-dashboard-form">
+                    <form action="{{ route('superadmin.users.store') }}" method="POST" class="admin-dashboard-form">
                         @csrf
 
                         <div>
-                            <label for="name" class="field-label">Nombre</label>
-                            <input id="name" name="name" type="text" class="field-input" value="{{ old('name') }}"
-                                minlength="3" maxlength="120" autocomplete="name"
-                                required>
+                            <label for="superadmin_name" class="field-label">Nombre</label>
+                            <input id="superadmin_name" name="name" type="text" class="field-input" value="{{ old('name') }}"
+                                minlength="3" maxlength="120" autocomplete="name" required>
                         </div>
 
                         <div>
-                            <label for="email" class="field-label">Correo institucional</label>
-                            <input id="email" name="email" type="email" class="field-input"
+                            <label for="superadmin_email" class="field-label">Correo institucional</label>
+                            <input id="superadmin_email" name="email" type="email" class="field-input"
                                 value="{{ old('email') }}" required maxlength="255" autocomplete="email"
                                 pattern="^[A-Za-z0-9._%+-]+@unifranz\.edu\.bo$">
                         </div>
 
                         <div>
-                            <label for="role_id" class="field-label">Rol</label>
-                            <select id="role_id" name="role_id" class="field-select" required>
+                            <label for="superadmin_role_id" class="field-label">Rol</label>
+                            <select id="superadmin_role_id" name="role_id" class="field-select" required>
                                 @foreach ($roles as $role)
                                     <option value="{{ $role->id }}" @selected(old('role_id') == $role->id)>
                                         {{ $role->name }}
@@ -190,13 +189,13 @@
 
                         <div class="admin-dashboard-form-grid">
                             <div>
-                                <label for="password" class="field-label">Contrasena</label>
+                                <label for="superadmin_password" class="field-label">Contrasena</label>
                                 <div class="relative">
-                                    <input id="password" name="password" type="password" class="field-input pr-24"
+                                    <input id="superadmin_password" name="password" type="password" class="field-input pr-24"
                                         minlength="8" required>
                                     <button type="button"
                                         data-password-toggle-button
-                                        data-target="password"
+                                        data-target="superadmin_password"
                                         class="absolute right-3 top-1/2 -translate-y-1/2 rounded-full px-3 py-1 text-xs font-semibold text-slate-600 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500">
                                         Mostrar
                                     </button>
@@ -204,13 +203,13 @@
                             </div>
 
                             <div>
-                                <label for="password_confirmation" class="field-label">Confirmar</label>
+                                <label for="superadmin_password_confirmation" class="field-label">Confirmar</label>
                                 <div class="relative">
-                                    <input id="password_confirmation" name="password_confirmation" type="password"
+                                    <input id="superadmin_password_confirmation" name="password_confirmation" type="password"
                                         class="field-input pr-24" minlength="8" required>
                                     <button type="button"
                                         data-password-toggle-button
-                                        data-target="password_confirmation"
+                                        data-target="superadmin_password_confirmation"
                                         class="absolute right-3 top-1/2 -translate-y-1/2 rounded-full px-3 py-1 text-xs font-semibold text-slate-600 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500">
                                         Mostrar
                                     </button>
@@ -228,27 +227,51 @@
                     </form>
                 </section>
 
+                <section class="surface-panel admin-dashboard-panel" data-dashboard-panel>
+                    <div class="admin-dashboard-panel-head admin-dashboard-panel-head-tight">
+                        <div>
+                            <p class="admin-dashboard-kicker admin-dashboard-kicker-light">Actividad reciente</p>
+                            <h2 class="admin-dashboard-section-title">Últimos usuarios gestionables</h2>
+                        </div>
+                    </div>
+
+                    <div class="admin-dashboard-timeline">
+                        @forelse ($latestManagedUsers as $activityUser)
+                            <article>
+                                <span class="admin-dashboard-timeline-dot"></span>
+                                <div>
+                                    <strong>{{ $activityUser->name }} · {{ $activityUser->role?->name }}</strong>
+                                    <p>{{ $activityUser->email }} · {{ $activityUser->activo ? 'Activo' : 'Inactivo' }}</p>
+                                </div>
+                            </article>
+                        @empty
+                            <article class="admin-dashboard-empty-card">
+                                <strong>Sin actividad disponible</strong>
+                                <p>No hay usuarios recientes en el ámbito de gestión.</p>
+                            </article>
+                        @endforelse
+                    </div>
+                </section>
             </div>
 
             <section class="surface-panel admin-dashboard-panel admin-dashboard-panel-tall" data-dashboard-panel>
                 <div class="admin-dashboard-panel-head">
                     <div>
-                        <p class="admin-dashboard-kicker admin-dashboard-kicker-light">Reuniones</p>
-                        <h2 class="admin-dashboard-section-title">Gestion de clases y estados</h2>
+                        <p class="admin-dashboard-kicker admin-dashboard-kicker-light">Reuniones globales</p>
+                        <h2 class="admin-dashboard-section-title">Control de clases institucionales</h2>
                     </div>
                 </div>
 
                 <div class="admin-dashboard-meeting-list-legacy" data-meeting-list>
                     @forelse ($meetings as $meeting)
                         @php
-                            $meetingUpdateFormId = 'meeting-update-' . $meeting->id;
-                            $meetingDeleteFormId = 'meeting-delete-' . $meeting->id;
+                            $meetingUpdateFormId = 'superadmin-meeting-update-' . $meeting->id;
+                            $meetingDeleteFormId = 'superadmin-meeting-delete-' . $meeting->id;
                         @endphp
-                        <form id="{{ $meetingUpdateFormId }}" action="{{ route('admin.reuniones.update', $meeting) }}" method="POST"
-                            class="rounded-[28px] border border-slate-100 bg-white p-5"
-                            data-meeting-card
+                        <form id="{{ $meetingUpdateFormId }}" action="{{ route('superadmin.reuniones.update', $meeting) }}"
+                            method="POST" class="rounded-[28px] border border-slate-100 bg-white p-5" data-meeting-card
                             data-state="{{ $meeting->estado }}"
-                            data-search="{{ \Illuminate\Support\Str::lower(trim($meeting->title . ' ' . $meeting->description . ' ' . ($meeting->docente?->name ?? ''))) }}">
+                            data-search="{{ \Illuminate\Support\Str::lower(trim($meeting->title . ' ' . ($meeting->description ?? '') . ' ' . ($meeting->docente?->name ?? ''))) }}">
                             @csrf
                             @method('PATCH')
 
@@ -282,7 +305,7 @@
                                 </div>
                             </div>
                         </form>
-                        <form id="{{ $meetingDeleteFormId }}" action="{{ route('admin.reuniones.destroy', $meeting) }}"
+                        <form id="{{ $meetingDeleteFormId }}" action="{{ route('superadmin.reuniones.destroy', $meeting) }}"
                             method="POST" class="hidden"
                             onsubmit="return confirm('Se eliminara esta reunion y sus registros asociados. Continuar?')">
                             @csrf
@@ -291,15 +314,10 @@
                     @empty
                         <article class="admin-dashboard-empty-card">
                             <strong>Sin reuniones registradas</strong>
-                            <p>No hay clases disponibles para administrar todavia.</p>
+                            <p>No hay clases disponibles para administrar.</p>
                         </article>
                     @endforelse
                 </div>
-
-                <article class="admin-dashboard-empty-card" data-meeting-empty hidden>
-                    <strong>Sin reuniones visibles</strong>
-                    <p>No hay reuniones disponibles para mostrar en este momento.</p>
-                </article>
             </section>
         </section>
 
@@ -307,8 +325,8 @@
             <section class="surface-panel admin-dashboard-panel" data-dashboard-panel>
                 <div class="admin-dashboard-panel-head admin-dashboard-panel-head-tight">
                     <div>
-                        <p class="admin-dashboard-kicker admin-dashboard-kicker-light">Usuarios</p>
-                        <h2 class="admin-dashboard-section-title">Gestion institucional</h2>
+                        <p class="admin-dashboard-kicker admin-dashboard-kicker-light">Usuarios operativos</p>
+                        <h2 class="admin-dashboard-section-title">Gestión por rol (admin/docente/estudiante)</h2>
                     </div>
 
                     <div class="admin-dashboard-panel-meta">
@@ -327,8 +345,8 @@
                 <div class="admin-dashboard-user-role-strip">
                     @foreach ($roles as $role)
                         @php
-                            $roleShare = $metrics['usuarios'] > 0
-                                ? round(($role->users_count / $metrics['usuarios']) * 100)
+                            $roleShare = $metrics['usuarios_total'] > 0
+                                ? round(($role->users_count / $metrics['usuarios_total']) * 100)
                                 : 0;
                         @endphp
                         <article class="admin-dashboard-user-role-pill">
@@ -354,16 +372,13 @@
                 <div class="admin-dashboard-user-list" data-user-list>
                     @foreach ($managedUsers as $managedUser)
                         @php
-                            $userDeleteFormId = 'user-delete-' . $managedUser->id;
-                            $isAdministratorAccount = $managedUser->role?->slug === 'administrador';
+                            $userDeleteFormId = 'superadmin-user-delete-' . $managedUser->id;
                             $managedUserPhotoUrl = $managedUser->foto_perfil
                                 ? route('users.photo', ['user' => $managedUser->id, 'v' => optional($managedUser->updated_at)->timestamp])
                                 : null;
                         @endphp
-                        <form action="{{ route('admin.users.update', $managedUser) }}" method="POST"
-                            class="admin-dashboard-user-card admin-dashboard-user-card-row"
-                            data-user-card
-                            data-user-form
+                        <form action="{{ route('superadmin.users.update', $managedUser) }}" method="POST"
+                            class="admin-dashboard-user-card admin-dashboard-user-card-row" data-user-card data-user-form
                             data-search="{{ \Illuminate\Support\Str::lower(trim($managedUser->name . ' ' . $managedUser->email . ' ' . ($managedUser->role?->name ?? ''))) }}">
                             @csrf
                             @method('PATCH')
@@ -393,69 +408,45 @@
                                         pattern="^[A-Za-z0-9._%+-]+@unifranz\.edu\.bo$">
                                 </div>
 
-                                @if ($isAdministratorAccount)
-                                    <input type="hidden" name="role_id" value="{{ $managedUser->role_id }}">
-                                    <div>
-                                        <label class="field-label mb-1 lg:hidden">Rol</label>
-                                        <select name="role_id_locked" class="field-select" disabled>
-                                            @foreach ($roles as $role)
-                                                <option value="{{ $role->id }}" @selected($managedUser->role_id === $role->id)>
-                                                    {{ $role->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                @else
-                                    <div>
-                                        <label class="field-label mb-1 lg:hidden">Rol</label>
-                                        <select name="role_id" class="field-select" required>
-                                            @foreach ($roles as $role)
-                                                <option value="{{ $role->id }}" @selected($managedUser->role_id === $role->id)>
-                                                    {{ $role->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                @endif
+                                <div>
+                                    <label class="field-label mb-1 lg:hidden">Rol</label>
+                                    <select name="role_id" class="field-select" required>
+                                        @foreach ($roles as $role)
+                                            <option value="{{ $role->id }}" @selected($managedUser->role_id === $role->id)>
+                                                {{ $role->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
                                 <div>
                                     <label class="field-label mb-1 lg:hidden">Estado</label>
                                     <label class="admin-dashboard-toggle-row admin-dashboard-toggle-box">
-                                        @if ($isAdministratorAccount)
-                                            <input type="hidden" name="activo" value="{{ $managedUser->activo ? '1' : '0' }}">
-                                        @endif
                                         <input type="checkbox" name="activo" value="1"
                                             class="h-4 w-4 rounded border-slate-300 text-orange-600 focus:ring-orange-200"
-                                            {{ $managedUser->activo ? 'checked' : '' }}
-                                            @disabled($isAdministratorAccount)>
+                                            {{ $managedUser->activo ? 'checked' : '' }}>
                                         Activo
                                     </label>
                                 </div>
 
                                 <div class="admin-dashboard-user-actions">
-                                    @if (! $isAdministratorAccount)
-                                        <button type="submit" form="{{ $userDeleteFormId }}" class="btn-danger">Eliminar</button>
-                                    @else
-                                        <span class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Administrador protegido</span>
-                                    @endif
+                                    <button type="submit" form="{{ $userDeleteFormId }}" class="btn-danger">Eliminar</button>
                                     <button type="submit" class="btn-secondary hidden" data-user-save-btn>Guardar</button>
                                 </div>
                             </div>
                         </form>
-                        @unless ($isAdministratorAccount)
-                            <form id="{{ $userDeleteFormId }}" action="{{ route('admin.users.destroy', $managedUser) }}"
-                                method="POST" class="hidden"
-                                onsubmit="return confirm('Se eliminara este usuario y sus datos asociados. Continuar?')">
-                                @csrf
-                                @method('DELETE')
-                            </form>
-                        @endunless
+                        <form id="{{ $userDeleteFormId }}" action="{{ route('superadmin.users.destroy', $managedUser) }}"
+                            method="POST" class="hidden"
+                            onsubmit="return confirm('Se eliminara este usuario y sus datos asociados. Continuar?')">
+                            @csrf
+                            @method('DELETE')
+                        </form>
                     @endforeach
                 </div>
 
                 <article class="admin-dashboard-empty-card" data-user-empty hidden>
                     <strong>Sin usuarios visibles</strong>
-                    <p>No hay cuentas que coincidan con la busqueda actual.</p>
+                    <p>No hay cuentas que coincidan con la búsqueda actual.</p>
                 </article>
             </section>
         </section>

@@ -41,7 +41,7 @@ class ProfileController extends Controller
     {
         $viewer = $request->user();
 
-        abort_unless($viewer && ($viewer->is($user) || $viewer->isRole('administrador')), 403);
+        abort_unless($viewer && ($viewer->is($user) || $viewer->isRole(['administrador', 'superadministrador'])), 403);
 
         $path = $this->normalizePhotoPath($user->foto_perfil);
 

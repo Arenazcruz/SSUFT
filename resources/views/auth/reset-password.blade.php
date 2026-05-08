@@ -20,14 +20,30 @@
 
         <div>
             <label for="password" class="field-label">Nueva contraseña</label>
-            <input id="password" name="password" type="password" required autocomplete="new-password"
-                   class="field-input" placeholder="Minimo 8 caracteres">
+            <div class="relative">
+                <input id="password" name="password" type="password" required autocomplete="new-password"
+                       class="field-input pr-24" placeholder="Minimo 8 caracteres">
+                <button type="button"
+                        data-password-toggle-button
+                        data-target="password"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 rounded-full px-3 py-1 text-xs font-semibold text-slate-600 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500">
+                    Mostrar
+                </button>
+            </div>
         </div>
 
         <div>
             <label for="password_confirmation" class="field-label">Confirmar contraseña</label>
-            <input id="password_confirmation" name="password_confirmation" type="password" required autocomplete="new-password"
-                   class="field-input" placeholder="Repite tu contraseña">
+            <div class="relative">
+                <input id="password_confirmation" name="password_confirmation" type="password" required autocomplete="new-password"
+                       class="field-input pr-24" placeholder="Repite tu contraseña">
+                <button type="button"
+                        data-password-toggle-button
+                        data-target="password_confirmation"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 rounded-full px-3 py-1 text-xs font-semibold text-slate-600 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500">
+                    Mostrar
+                </button>
+            </div>
         </div>
 
         <button type="submit" class="btn-primary w-full">Actualizar contraseña</button>

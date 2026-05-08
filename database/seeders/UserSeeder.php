@@ -14,6 +14,18 @@ class UserSeeder extends Seeder
         $roles = Role::query()->pluck('id', 'slug');
 
         User::updateOrCreate(
+            ['email' => 'superadmin@unifranz.edu.bo'],
+            [
+                'name' => 'Rocio Andrade',
+                'role_id' => $roles['superadministrador'],
+                'password' => Hash::make('password'),
+                'activo' => true,
+                'avatar_color' => '#0f172a',
+                'email_verified_at' => now(),
+            ]
+        );
+
+        User::updateOrCreate(
             ['email' => 'admin@unifranz.edu.bo'],
             [
                 'name' => 'Paola Mendoza',

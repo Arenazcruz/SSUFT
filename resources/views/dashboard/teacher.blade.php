@@ -31,20 +31,26 @@
                     @csrf
                     <div>
                         <label for="title" class="field-label">Título</label>
-                        <input id="title" name="title" type="text" class="field-input" value="{{ old('title') }}" required placeholder="Ej. Diseño de sistemas distribuidos">
+                        <input id="title" name="title" type="text" class="field-input" value="{{ old('title') }}"
+                            required minlength="5" maxlength="120" autocomplete="off"
+                            placeholder="Ej. Diseño de sistemas distribuidos">
                     </div>
                     <div>
                         <label for="description" class="field-label">Descripción</label>
-                        <textarea id="description" name="description" rows="4" class="field-input" placeholder="Objetivos, dinámica o enfoque de la clase">{{ old('description') }}</textarea>
+                        <textarea id="description" name="description" rows="4" class="field-input" maxlength="1500"
+                            placeholder="Objetivos, dinámica o enfoque de la clase">{{ old('description') }}</textarea>
                     </div>
                     <div class="grid gap-5 md:grid-cols-2">
                         <div>
                             <label for="scheduled_at" class="field-label">Fecha y hora</label>
-                            <input id="scheduled_at" name="scheduled_at" type="datetime-local" class="field-input" value="{{ old('scheduled_at', now()->addDay()->format('Y-m-d\TH:i')) }}" required>
+                            <input id="scheduled_at" name="scheduled_at" type="datetime-local" class="field-input"
+                                value="{{ old('scheduled_at', now()->addDay()->format('Y-m-d\TH:i')) }}"
+                                min="{{ now()->format('Y-m-d\TH:i') }}" step="60" required>
                         </div>
                         <div>
                             <label for="duration_minutes" class="field-label">Duración</label>
-                            <input id="duration_minutes" name="duration_minutes" type="number" min="30" max="240" class="field-input" value="{{ old('duration_minutes', 90) }}" required>
+                            <input id="duration_minutes" name="duration_minutes" type="number" min="30" max="240"
+                                step="5" class="field-input" value="{{ old('duration_minutes', 90) }}" required>
                         </div>
                     </div>
                     <button type="submit" class="btn-primary w-full">Crear reunión</button>

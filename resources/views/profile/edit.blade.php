@@ -48,11 +48,27 @@
             <div class="mt-6 grid gap-5 md:grid-cols-2">
                 <label>
                     <span class="field-label">Nueva contraseña</span>
-                    <input type="password" name="password" class="field-input" autocomplete="new-password">
+                    <div class="relative">
+                        <input id="profile_password" type="password" name="password" class="field-input pr-24" autocomplete="new-password">
+                        <button type="button"
+                                data-password-toggle-button
+                                data-target="profile_password"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 rounded-full px-3 py-1 text-xs font-semibold text-slate-600 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500">
+                            Mostrar
+                        </button>
+                    </div>
                 </label>
                 <label>
                     <span class="field-label">Confirmar contraseña</span>
-                    <input type="password" name="password_confirmation" class="field-input" autocomplete="new-password">
+                    <div class="relative">
+                        <input id="profile_password_confirmation" type="password" name="password_confirmation" class="field-input pr-24" autocomplete="new-password">
+                        <button type="button"
+                                data-password-toggle-button
+                                data-target="profile_password_confirmation"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 rounded-full px-3 py-1 text-xs font-semibold text-slate-600 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500">
+                            Mostrar
+                        </button>
+                    </div>
                 </label>
             </div>
 

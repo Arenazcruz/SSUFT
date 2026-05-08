@@ -1,5 +1,37 @@
 import './bootstrap';
 
+function initPasswordVisibilityToggles() {
+    const toggleButtons = Array.from(document.querySelectorAll('[data-password-toggle-button]'));
+
+    if (!toggleButtons.length) {
+        return;
+    }
+
+    toggleButtons.forEach((button) => {
+        const targetId = button.dataset.target || '';
+        const input = targetId ? document.getElementById(targetId) : null;
+
+        if (!(input instanceof HTMLInputElement)) {
+            return;
+        }
+
+        const syncLabel = () => {
+            const hidden = input.type === 'password';
+            button.textContent = hidden ? 'Mostrar' : 'Ocultar';
+            button.setAttribute('aria-label', hidden ? 'Mostrar contraseña' : 'Ocultar contraseña');
+            button.setAttribute('aria-pressed', hidden ? 'false' : 'true');
+        };
+
+        button.addEventListener('click', () => {
+            input.type = input.type === 'password' ? 'text' : 'password';
+            syncLabel();
+            input.focus({ preventScroll: true });
+        });
+
+        syncLabel();
+    });
+}
+
 function initCollectionFilter({
     root,
     inputSelector,
@@ -95,10 +127,76 @@ function initAdminDashboard() {
             return !term || haystack.includes(term);
         },
     });
+
+    initUserFormChangeIndicators(root);
+}
+
+function initUserFormChangeIndicators(root) {
+    const forms = Array.from(root.querySelectorAll('[data-user-form]'));
+
+    if (!forms.length) {
+        return;
+    }
+
+    forms.forEach((form) => {
+        const saveButton = form.querySelector('[data-user-save-btn]');
+
+        if (!(saveButton instanceof HTMLButtonElement)) {
+            return;
+        }
+
+        const controls = Array.from(form.querySelectorAll('input, select, textarea')).filter((control) => {
+            if (!(control instanceof HTMLInputElement || control instanceof HTMLSelectElement || control instanceof HTMLTextAreaElement)) {
+                return false;
+            }
+
+            if (control.disabled || !control.name) {
+                return false;
+            }
+
+            if (control instanceof HTMLInputElement) {
+                return !['hidden', 'submit', 'button'].includes(control.type);
+            }
+
+            return true;
+        });
+
+        if (!controls.length) {
+            return;
+        }
+
+        const snapshot = () => JSON.stringify(
+            controls.map((control) => {
+                if (control instanceof HTMLInputElement && control.type === 'checkbox') {
+                    return [control.name, control.checked ? '1' : '0'];
+                }
+
+                return [control.name, control.value];
+            })
+        );
+
+        const initialState = snapshot();
+
+        const sync = () => {
+            const hasChanges = snapshot() !== initialState;
+            saveButton.classList.toggle('hidden', !hasChanges);
+        };
+
+        controls.forEach((control) => {
+            control.addEventListener('input', sync);
+            control.addEventListener('change', sync);
+        });
+
+        sync();
+    });
 }
 
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAdminDashboard, { once: true });
+    document.addEventListener('DOMContentLoaded', () => {
+        initPasswordVisibilityToggles();
+        initAdminDashboard();
+    }, { once: true });
 } else {
+    initPasswordVisibilityToggles();
     initAdminDashboard();
 }

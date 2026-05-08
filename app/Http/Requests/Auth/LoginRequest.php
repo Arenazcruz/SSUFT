@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use App\Rules\InstitutionalEmail;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -30,13 +32,15 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        $credentials = [
-            'email' => $this->string('email')->lower()->toString(),
-            'password' => $this->string('password')->toString(),
-            'activo' => true,
-        ];
+        $email = $this->string('email')->lower()->toString();
+        $plainPassword = $this->string('password')->toString();
 
-        if (! Auth::attempt($credentials, $this->boolean('remember'))) {
+        $user = User::query()
+            ->where('email', $email)
+            ->where('activo', true)
+            ->first();
+
+        if (! $user || ! $this->passwordMatches($plainPassword, (string) $user->password)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -44,8 +48,29 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        if (! Hash::isHashed((string) $user->password)) {
+            // Password legacy en texto plano: se migra a hash al primer login exitoso.
+            $user->password = $plainPassword;
+            $user->save();
+        }
+
+        Auth::login($user, $this->boolean('remember'));
+
         RateLimiter::clear($this->throttleKey());
         $this->session()->regenerate();
+    }
+
+    private function passwordMatches(string $plainPassword, string $storedPassword): bool
+    {
+        if ($storedPassword === '') {
+            return false;
+        }
+
+        if (Hash::isHashed($storedPassword)) {
+            return password_verify($plainPassword, $storedPassword);
+        }
+
+        return hash_equals($storedPassword, $plainPassword);
     }
 
     protected function prepareForValidation(): void

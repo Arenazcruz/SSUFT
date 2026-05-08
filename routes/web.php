@@ -11,6 +11,9 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReunionController;
 use App\Http\Controllers\StudentDashboardController;
+use App\Http\Controllers\SuperAdmin\ReunionController as SuperAdminReunionController;
+use App\Http\Controllers\SuperAdmin\UserController as SuperAdminUserController;
+use App\Http\Controllers\SuperAdminDashboardController;
 use App\Http\Controllers\Teacher\ReunionController as TeacherReunionController;
 use App\Http\Controllers\TeacherDashboardController;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +45,15 @@ Route::middleware('auth')->group(function (): void {
 
     Route::middleware('role:estudiante')->group(function (): void {
         Route::get('/estudiante/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
+    });
+
+    Route::middleware('role:superadministrador')->group(function (): void {
+        Route::get('/superadministrador/dashboard', [SuperAdminDashboardController::class, 'index'])->name('superadmin.dashboard');
+        Route::post('/superadministrador/usuarios', [SuperAdminUserController::class, 'store'])->name('superadmin.users.store');
+        Route::patch('/superadministrador/usuarios/{user}', [SuperAdminUserController::class, 'update'])->name('superadmin.users.update');
+        Route::delete('/superadministrador/usuarios/{user}', [SuperAdminUserController::class, 'destroy'])->name('superadmin.users.destroy');
+        Route::patch('/superadministrador/reuniones/{reunion}', [SuperAdminReunionController::class, 'update'])->name('superadmin.reuniones.update');
+        Route::delete('/superadministrador/reuniones/{reunion}', [SuperAdminReunionController::class, 'destroy'])->name('superadmin.reuniones.destroy');
     });
 
     Route::middleware('role:docente')->group(function (): void {

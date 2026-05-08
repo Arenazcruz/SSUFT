@@ -68,8 +68,16 @@
                 <label for="password_login" class="field-label mb-0">Contraseña</label>
                 <a href="{{ route('password.request') }}" class="text-sm font-semibold text-orange-600">¿La olvidaste?</a>
             </div>
-            <input id="password_login" name="password" type="password" required autocomplete="current-password"
-                   class="field-input" placeholder="Tu contraseña">
+            <div class="relative">
+                <input id="password_login" name="password" type="password" required autocomplete="current-password"
+                       class="field-input pr-24" placeholder="Tu contraseña">
+                <button type="button"
+                        data-password-toggle-button
+                        data-target="password_login"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 rounded-full px-3 py-1 text-xs font-semibold text-slate-600 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500">
+                    Mostrar
+                </button>
+            </div>
         </div>
 
         <label class="flex items-center gap-3 text-sm text-slate-500">

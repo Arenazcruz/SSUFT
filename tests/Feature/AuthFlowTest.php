@@ -51,6 +51,40 @@ class AuthFlowTest extends TestCase
         $redirected->assertRedirect(route('admin.dashboard'));
     }
 
+    public function test_plain_text_password_is_accepted_and_migrated_to_hash_on_login(): void
+    {
+        $adminRole = Role::create([
+            'name' => 'Administrador',
+            'slug' => 'administrador',
+        ]);
+
+        $user = User::create([
+            'role_id' => $adminRole->id,
+            'name' => 'Legacy Password User',
+            'email' => 'legacy@unifranz.edu.bo',
+            'password' => Hash::make('temporal-pass-123'),
+            'activo' => true,
+        ]);
+
+        // Simula un dato legacy guardado en texto plano en la base.
+        User::query()->whereKey($user->id)->update([
+            'password' => 'plano123',
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => 'legacy@unifranz.edu.bo',
+            'password' => 'plano123',
+        ]);
+
+        $response->assertRedirect(route('dashboard'));
+        $this->assertAuthenticatedAs($user);
+
+        $user->refresh();
+        $this->assertNotSame('plano123', $user->password);
+        $this->assertTrue(Hash::isHashed($user->password));
+        $this->assertTrue(Hash::check('plano123', $user->password));
+    }
+
     public function test_face_login_authenticates_user_when_face_is_verified(): void
     {
         Storage::fake('public');

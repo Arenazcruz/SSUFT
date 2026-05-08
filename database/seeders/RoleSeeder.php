@@ -25,6 +25,11 @@ class RoleSeeder extends Seeder
                 'slug' => 'estudiante',
                 'description' => 'Accede a clases en vivo, programadas y grabaciones.',
             ],
+            [
+                'name' => 'Superadministrador',
+                'slug' => 'superadministrador',
+                'description' => 'Gestiona toda la plataforma con control extendido y gobierno transversal.',
+            ],
         ];
 
         foreach ($roles as $role) {

@@ -18,6 +18,7 @@
         ? route('profile.photo', ['v' => optional($user->updated_at)->timestamp])
         : null;
     $dashboardRoute = match ($role) {
+        'superadministrador' => 'superadmin.dashboard',
         'administrador' => 'admin.dashboard',
         'docente' => 'teacher.dashboard',
         'estudiante' => 'student.dashboard',
@@ -34,17 +35,17 @@
 
     @if ($public)
         <header class="relative z-10 px-6 py-6 lg:px-10">
-            <nav class="mx-auto flex max-w-7xl items-center justify-between rounded-full border border-white/60 bg-white/75 px-6 py-4 shadow-[0_14px_40px_rgba(17,17,17,0.06)] backdrop-blur-xl">
+            <nav class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 rounded-[28px] border border-white/60 bg-white/75 px-4 py-4 shadow-[0_14px_40px_rgba(17,17,17,0.06)] backdrop-blur-xl sm:rounded-full sm:px-6">
                 <a href="{{ route('landing') }}" class="flex items-center gap-3">
                     <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#111111] text-sm font-bold text-white">UF</span>
-                    <div>
+                    <div class="min-w-0">
                         <p class="font-display text-sm font-semibold uppercase tracking-[0.24em] text-orange-600">UNIFRANZ</p>
                         <p class="text-sm text-slate-500">Academic Streaming Platform</p>
                     </div>
                 </a>
-                <div class="flex items-center gap-3">
+                <div class="flex w-full flex-wrap items-center gap-3 sm:w-auto sm:justify-end">
                     <a href="#conocer-mas" class="hidden text-sm font-semibold text-slate-600 md:inline-flex">Conocer más</a>
-                    <a href="{{ route('login') }}" class="btn-primary">Iniciar sesión</a>
+                    <a href="{{ route('login') }}" class="btn-primary w-full sm:w-auto">Iniciar sesión</a>
                 </div>
             </nav>
         </header>
@@ -102,8 +103,41 @@
             </aside>
 
             <div class="flex min-h-screen flex-col">
-                <header class="px-6 py-6 lg:px-8">
-                    <div class="surface-panel flex flex-col gap-4 px-6 py-5 md:flex-row md:items-center md:justify-between">
+                <div class="px-4 pt-4 sm:px-6 lg:hidden">
+                    <details class="surface-panel overflow-hidden">
+                        <summary class="flex cursor-pointer list-none items-center justify-between px-5 py-4 text-sm font-semibold text-slate-700">
+                            Navegación y cuenta
+                            <span class="text-xs uppercase tracking-[0.2em] text-orange-600">Menu</span>
+                        </summary>
+                        <div class="border-t border-slate-100 px-5 py-4">
+                            <div class="space-y-2">
+                                @foreach ($navigation as $item)
+                                    <a href="{{ route($item['route']) }}" @class([
+                                        'sidebar-link',
+                                        'sidebar-link-active' => request()->routeIs($item['route']),
+                                    ])>
+                                        <span>{{ $item['label'] }}</span>
+                                    </a>
+                                @endforeach
+                                <a href="{{ route('profile.edit') }}" @class([
+                                    'sidebar-link',
+                                    'sidebar-link-active' => request()->routeIs('profile.edit'),
+                                ])>
+                                    <span>Mi perfil</span>
+                                </a>
+                            </div>
+
+                            <div class="mt-4 rounded-2xl border border-dashed border-slate-200 p-4">
+                                <p class="text-xs uppercase tracking-[0.25em] text-slate-400">Cuenta activa</p>
+                                <p class="mt-2 font-semibold text-slate-900">{{ $user?->name }}</p>
+                                <p class="mt-1 text-sm break-all text-slate-500">{{ $user?->email }}</p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+
+                <header class="px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
+                    <div class="surface-panel flex flex-col gap-4 px-4 py-4 sm:px-6 sm:py-5 md:flex-row md:items-center md:justify-between">
                         <div>
                             <p class="text-xs font-semibold uppercase tracking-[0.25em] text-orange-600">{{ $eyebrow ?? 'Panel principal' }}</p>
                             <h1 class="mt-2 text-2xl font-semibold text-[#111111]">{{ $pageTitle ?? 'UNIFRANZ Stream' }}</h1>
@@ -111,17 +145,17 @@
                                 <p class="mt-1 text-sm text-slate-500">{{ $pageDescription }}</p>
                             @endisset
                         </div>
-                        <div class="flex items-center gap-3">
-                            <a href="{{ route('landing') }}" class="btn-secondary">Ver landing</a>
-                            <form action="{{ route('logout') }}" method="POST">
+                        <div class="flex w-full flex-wrap items-center gap-3 md:w-auto md:justify-end">
+                            <a href="{{ route('landing') }}" class="btn-secondary w-full sm:w-auto">Ver landing</a>
+                            <form action="{{ route('logout') }}" method="POST" class="w-full sm:w-auto">
                                 @csrf
-                                <button type="submit" class="btn-primary">Cerrar sesión</button>
+                                <button type="submit" class="btn-primary w-full sm:w-auto">Cerrar sesión</button>
                             </form>
                         </div>
                     </div>
                 </header>
 
-                <main class="flex-1 px-6 pb-8 lg:px-8">
+                <main class="flex-1 px-4 pb-6 sm:px-6 sm:pb-8 lg:px-8">
                     @if (session('success'))
                         <div class="mb-6 rounded-3xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm text-emerald-700">
                             {{ session('success') }}

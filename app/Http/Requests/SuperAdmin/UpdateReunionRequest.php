@@ -1,22 +1,17 @@
 <?php
 
-namespace App\Http\Requests\Teacher;
+namespace App\Http\Requests\SuperAdmin;
 
 use App\Models\Reunion;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
-class UpdateReunionStatusRequest extends FormRequest
+class UpdateReunionRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        $user = $this->user();
-        /** @var Reunion|null $reunion */
-        $reunion = $this->route('reunion');
-
-        return ($user?->isRole('docente') ?? false)
-            && (! $reunion || $reunion->docente_id === $user->id);
+        return $this->user()?->isRole('superadministrador') ?? false;
     }
 
     public function rules(): array
@@ -45,8 +40,9 @@ class UpdateReunionStatusRequest extends FormRequest
             };
 
             if (! in_array($targetState, $allowedTransitions, true)) {
-                $validator->errors()->add('estado', 'Transición de estado no permitida para esta clase.');
+                $validator->errors()->add('estado', 'Transición de estado no permitida para esta reunión.');
             }
         });
     }
 }
+
