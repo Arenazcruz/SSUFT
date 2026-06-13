@@ -20,7 +20,7 @@ class ReunionController extends Controller
             'from-slate-950 via-zinc-800 to-orange-500',
         ];
 
-        Reunion::create([
+        $reunion = Reunion::create([
             'docente_id' => $request->user()->id,
             'title' => $request->validated('title'),
             'description' => $request->validated('description'),
@@ -30,8 +30,10 @@ class ReunionController extends Controller
             'access_code' => Str::upper(Str::random(6)),
             'cover_gradient' => $gradients[array_rand($gradients)],
         ]);
+        $reunion->jitsi_room = $this->generateJitsiRoom($reunion);
+        $reunion->save();
 
-        return back()->with('success', 'La clase fue programada correctamente.');
+        return back()->with('success', 'La transmisión fue programada correctamente.');
     }
 
     public function update(UpdateReunionStatusRequest $request, Reunion $reunion): RedirectResponse
@@ -40,13 +42,21 @@ class ReunionController extends Controller
 
         $estado = $request->validated('estado');
         $payload = ['estado' => $estado];
+        $message = 'El estado de la clase fue actualizado.';
 
         if ($estado === 'en_vivo' && ! $reunion->started_at) {
             $payload['started_at'] = now();
+            $payload['ended_at'] = null;
+            $message = 'La transmisión en vivo se inició correctamente.';
+        }
+
+        if ($estado === 'en_vivo' && ! $reunion->jitsi_room) {
+            $payload['jitsi_room'] = $this->generateJitsiRoom($reunion);
         }
 
         if ($estado === 'finalizada') {
             $payload['ended_at'] = now();
+            $payload['started_at'] = $reunion->started_at ?? now();
 
             $reunion->grabaciones()->firstOrCreate(
                 ['title' => 'Grabación - '.$reunion->title],
@@ -57,19 +67,54 @@ class ReunionController extends Controller
                     'duration_minutes' => $reunion->duration_minutes,
                 ]
             );
+
+            $message = 'La transmisión fue finalizada y la sesión quedó cerrada.';
+        }
+
+        if ($estado === 'cancelada') {
+            $payload['started_at'] = null;
+            $payload['ended_at'] = now();
+            $message = 'La transmisión programada fue cancelada.';
         }
 
         $reunion->update($payload);
 
-        return back()->with('success', 'El estado de la clase fue actualizado.');
+        return back()->with('success', $message);
     }
 
     public function destroy(Request $request, Reunion $reunion): RedirectResponse
     {
         abort_unless($reunion->docente_id === $request->user()->id, 403);
 
-        $reunion->delete();
+        if ($reunion->estado !== 'programada') {
+            return back()->withErrors([
+                'estado' => 'Solo se pueden cancelar transmisiones en estado programada.',
+            ]);
+        }
 
-        return back()->with('success', 'La reunion fue eliminada correctamente.');
+        $reunion->update([
+            'estado' => 'cancelada',
+            'started_at' => null,
+            'ended_at' => now(),
+        ]);
+
+        return back()->with('success', 'La transmisión programada fue cancelada.');
+    }
+
+    private function generateJitsiRoom(Reunion $reunion): string
+    {
+        $accessCode = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string) ($reunion->access_code ?? ''))) ?: 'NOACCESS';
+        $base = 'SSUFT-'.$reunion->id.'-'.$accessCode;
+
+        do {
+            $suffix = strtoupper(Str::random(8));
+            $room = $base.'-'.$suffix;
+            $exists = Reunion::query()
+                ->where('jitsi_room', $room)
+                ->whereKeyNot($reunion->id)
+                ->exists();
+        } while ($exists);
+
+        return $room;
     }
 }

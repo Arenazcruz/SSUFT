@@ -22,8 +22,47 @@
                 <div class="p-8">
                     <div class="rounded-[28px] border border-white/10 bg-white/5 p-8 text-center">
                         <p class="text-sm uppercase tracking-[0.24em] text-orange-100/70">Streaming académico</p>
-                        <h3 class="mt-4 text-2xl font-semibold">Espacio principal de transmisión</h3>
-                        <p class="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/70">{{ $reunion->description }}</p>
+                        @if ($canJoinLiveRoom)
+                            <h3 class="mt-4 text-2xl font-semibold">Clase en vivo</h3>
+                            <p class="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/70">
+                                La videollamada está activa. Ábrela en una ventana dedicada para mantener este panel como centro de control.
+                            </p>
+                            <div class="mx-auto mt-6 max-w-4xl rounded-2xl border border-white/15 bg-white/5 p-5 text-left">
+                                <div class="flex flex-wrap items-center gap-3">
+                                    <a href="{{ $liveRoomUrl }}"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       class="btn-ghost">
+                                        Abrir videollamada
+                                    </a>
+                                    @if ($isTeacherOwner)
+                                        <form action="{{ route('teacher.reuniones.update', $reunion) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="hidden" name="estado" value="finalizada">
+                                            <button type="submit" class="btn-secondary">
+                                                Finalizar clase
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </div>
+                        @elseif ($reunion->estado === 'programada')
+                            <h3 class="mt-4 text-2xl font-semibold">Clase programada</h3>
+                            <p class="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/70">
+                                Esta clase aún no inició. La videollamada estará disponible cuando el docente la ponga en vivo.
+                            </p>
+                        @elseif ($streamAccessClosed)
+                            <h3 class="mt-4 text-2xl font-semibold">Transmisión cerrada</h3>
+                            <p class="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/70">
+                                Esta sesión fue {{ $reunion->estado === 'cancelada' ? 'cancelada por el docente' : 'finalizada por el docente' }} y ya no admite acceso en tiempo real.
+                            </p>
+                        @else
+                            <h3 class="mt-4 text-2xl font-semibold">Sala en preparación</h3>
+                            <p class="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/70">
+                                La clase está en vivo, pero todavía no tiene una sala Jitsi disponible.
+                            </p>
+                        @endif
                         <div class="mt-8 grid gap-4 md:grid-cols-3">
                             <div class="rounded-[24px] border border-white/10 bg-white/5 p-4">
                                 <p class="text-xs uppercase tracking-[0.24em] text-white/50">Participantes</p>

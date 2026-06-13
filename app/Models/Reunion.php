@@ -23,6 +23,7 @@ class Reunion extends Model
         'estado',
         'duration_minutes',
         'access_code',
+        'jitsi_room',
         'cover_gradient',
     ];
 

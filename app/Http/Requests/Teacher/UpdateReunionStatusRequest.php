@@ -22,7 +22,7 @@ class UpdateReunionStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'estado' => ['required', Rule::in(['programada', 'en_vivo', 'finalizada'])],
+            'estado' => ['required', Rule::in(['programada', 'en_vivo', 'finalizada', 'cancelada'])],
         ];
     }
 
@@ -38,9 +38,10 @@ class UpdateReunionStatusRequest extends FormRequest
             }
 
             $allowedTransitions = match ($reunion->estado) {
-                'programada' => ['programada', 'en_vivo', 'finalizada'],
+                'programada' => ['programada', 'en_vivo', 'cancelada'],
                 'en_vivo' => ['en_vivo', 'finalizada'],
                 'finalizada' => ['finalizada'],
+                'cancelada' => ['cancelada'],
                 default => [],
             };
 

@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function (): void {
 
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/reuniones/{reunion}', [ReunionController::class, 'show'])->name('reuniones.show');
+    Route::get('/reuniones/{reunion}/videollamada', [ReunionController::class, 'live'])->name('reuniones.live');
     Route::get('/perfil', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/perfil/foto', [ProfileController::class, 'photo'])->name('profile.photo');
     Route::get('/usuarios/{user}/foto', [ProfileController::class, 'userPhoto'])->name('users.photo');

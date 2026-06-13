@@ -84,6 +84,62 @@ class TeacherValidationTest extends TestCase
         ]);
     }
 
+    public function test_teacher_cannot_finalize_a_scheduled_meeting_without_starting_it(): void
+    {
+        [$teacher] = $this->createTeacherContext();
+
+        $meeting = Reunion::create([
+            'docente_id' => $teacher->id,
+            'title' => 'Clase programada',
+            'description' => 'Pendiente de inicio',
+            'scheduled_at' => now()->addDay(),
+            'estado' => 'programada',
+            'duration_minutes' => 90,
+            'access_code' => 'PGM-001',
+        ]);
+
+        $response = $this->actingAs($teacher)
+            ->from(route('teacher.dashboard'))
+            ->patch(route('teacher.reuniones.update', $meeting), [
+                'estado' => 'finalizada',
+            ]);
+
+        $response->assertRedirect(route('teacher.dashboard'));
+        $response->assertSessionHasErrors('estado');
+        $this->assertDatabaseHas('reuniones', [
+            'id' => $meeting->id,
+            'estado' => 'programada',
+        ]);
+    }
+
+    public function test_teacher_can_cancel_a_scheduled_meeting(): void
+    {
+        [$teacher] = $this->createTeacherContext();
+
+        $meeting = Reunion::create([
+            'docente_id' => $teacher->id,
+            'title' => 'Clase a cancelar',
+            'description' => 'No se podrá impartir',
+            'scheduled_at' => now()->addDays(2),
+            'estado' => 'programada',
+            'duration_minutes' => 90,
+            'access_code' => 'CNL-001',
+        ]);
+
+        $response = $this->actingAs($teacher)
+            ->from(route('teacher.dashboard'))
+            ->patch(route('teacher.reuniones.update', $meeting), [
+                'estado' => 'cancelada',
+            ]);
+
+        $response->assertRedirect(route('teacher.dashboard'));
+        $response->assertSessionHasNoErrors();
+        $this->assertDatabaseHas('reuniones', [
+            'id' => $meeting->id,
+            'estado' => 'cancelada',
+        ]);
+    }
+
     public function test_teacher_cannot_update_status_of_other_teacher_reunion(): void
     {
         [$teacher] = $this->createTeacherContext();
@@ -149,4 +205,3 @@ class TeacherValidationTest extends TestCase
         return Role::query()->where('slug', $slug)->firstOrFail();
     }
 }
-
