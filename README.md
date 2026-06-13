@@ -22,7 +22,7 @@ Asegurate de tener instalado:
 - PostgreSQL 14+ (recomendado 16+)
 - Extension PHP `pdo_pgsql` habilitada
 
-## Ejecucion con Docker
+## Ejecución como servidor web con Docker
 
 1. Crear archivo de entorno para Docker:
 
@@ -51,6 +51,10 @@ docker compose exec app php artisan migrate
 La app quedara disponible en:
 
 - `http://localhost:8000`
+
+Endpoint de estado del servidor web:
+
+- `GET http://localhost:8000/api/status`
 
 Comandos utiles en Docker:
 
