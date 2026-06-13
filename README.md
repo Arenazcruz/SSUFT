@@ -167,6 +167,40 @@ npm run build
 php artisan optimize
 ```
 
+## Despliegue en Render
+
+Para desplegar una demo como **Web Service** en Render sin PostgreSQL, usa el Dockerfile especifico para Render:
+
+- Rama: `developer`
+- Runtime: `Docker`
+- Dockerfile path: `Dockerfile.render`
+- Puerto: Render inyecta `PORT`; el contenedor usa `${PORT:-10000}`
+
+Variables de entorno recomendadas en Render:
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+APP_KEY=base64:TU_APP_KEY
+APP_URL=https://tu-servicio.onrender.com
+LOG_CHANNEL=stderr
+DB_CONNECTION=sqlite
+DB_DATABASE=/var/www/html/database/database.sqlite
+SESSION_DRIVER=file
+CACHE_STORE=file
+QUEUE_CONNECTION=sync
+```
+
+Puedes generar `APP_KEY` localmente con:
+
+```bash
+php artisan key:generate --show
+```
+
+`Dockerfile.render` instala dependencias PHP, Composer, Node y npm; ejecuta `composer install --no-dev --optimize-autoloader`, `npm install` y `npm run build`; crea las carpetas necesarias de `storage` y `bootstrap/cache`; crea un SQLite temporal dentro de la imagen y ejecuta migraciones. Esto permite mostrar la landing page y la pantalla de login sin configurar PostgreSQL por ahora.
+
+Nota: el SQLite creado en la imagen no debe usarse como base de datos persistente. Para produccion real, configura PostgreSQL u otro servicio de base de datos persistente en Render.
+
 ## Pruebas
 
 ```bash
