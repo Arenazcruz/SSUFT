@@ -1,58 +1,252 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SSUFT
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicacion web basada en Laravel.
 
-## About Laravel
+## Stack y versiones
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Framework: Laravel `13.1.1`
+- PHP requerido: `^8.3` (recomendado `8.4.18`)
+- Composer recomendado: `2.9.5+`
+- Node.js recomendado: `24.13.0` (LTS actual o superior)
+- npm recomendado: `11.6.2+`
+- Base de datos por defecto: PostgreSQL (`pgsql`)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requisitos previos
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Asegurate de tener instalado:
 
-## Learning Laravel
+- PHP 8.3 o superior
+- Composer 2
+- Node.js y npm
+- Git
+- PostgreSQL 14+ (recomendado 16+)
+- Extension PHP `pdo_pgsql` habilitada
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Ejecución como servidor web con Docker
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. Crear archivo de entorno para Docker:
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```powershell
+Copy-Item .env.docker.example .env
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+2. Construir y levantar contenedores:
 
-## Contributing
+```bash
+docker compose up --build -d
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3. Generar clave de aplicacion:
 
-## Code of Conduct
+```bash
+docker compose exec app php artisan key:generate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+4. Ejecutar migraciones:
 
-## Security Vulnerabilities
+```bash
+docker compose exec app php artisan migrate
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+La app quedara disponible en:
 
-## License
+- `http://localhost:8000`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Endpoint de estado del servidor web:
+
+- `GET http://localhost:8000/api/status`
+
+Comandos utiles en Docker:
+
+```bash
+# Instalar dependencias frontend
+docker compose exec app npm install
+
+# Levantar Vite en modo desarrollo
+docker compose exec app npm run dev -- --host 0.0.0.0 --port 5173
+
+# Ejecutar pruebas
+docker compose exec app php artisan test
+```
+
+## Instalacion del proyecto
+
+1. Clonar repositorio:
+
+```bash
+git clone https://github.com/Arenazcruz/SSUFT.git
+cd SSUFT
+```
+
+2. Instalar dependencias PHP:
+
+```bash
+composer install
+```
+
+3. Crear archivo de entorno:
+
+```bash
+cp .env.example .env
+```
+
+En Windows PowerShell, si `cp` no funciona:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+4. Generar clave de aplicacion:
+
+```bash
+php artisan key:generate
+```
+
+5. Crear base de datos en PostgreSQL:
+
+```bash
+# Ejemplo con psql
+createdb -U postgres ssuft
+```
+
+6. Configurar conexion de base de datos en `.env`:
+
+```env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=ssuft
+DB_USERNAME=postgres
+DB_PASSWORD=tu_password
+```
+
+7. Ejecutar migraciones:
+
+```bash
+php artisan migrate
+```
+
+8. Instalar dependencias frontend:
+
+```bash
+npm install
+```
+
+## Ejecucion en desarrollo
+
+### Opcion 1 (recomendada)
+
+Ejecuta backend + cola + logs + Vite con un solo comando:
+
+```bash
+composer dev
+```
+
+### Opcion 2 (manual)
+
+Terminal 1:
+
+```bash
+php artisan serve
+```
+
+Terminal 2:
+
+```bash
+npm run dev
+```
+
+La app estara disponible en:
+
+- `http://127.0.0.1:8000`
+
+## Build para produccion
+
+```bash
+npm run build
+php artisan optimize
+```
+
+## Despliegue en Render
+
+Para desplegar una demo como **Web Service** en Render sin PostgreSQL, usa el Dockerfile especifico para Render:
+
+- Rama: `developer`
+- Runtime: `Docker`
+- Dockerfile path: `Dockerfile.render`
+- Puerto: Render inyecta `PORT`; el contenedor usa `${PORT:-10000}`
+
+Variables de entorno recomendadas en Render:
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+APP_KEY=base64:TU_APP_KEY
+APP_URL=https://tu-servicio.onrender.com
+LOG_CHANNEL=stderr
+DB_CONNECTION=sqlite
+DB_DATABASE=/var/www/html/database/database.sqlite
+SESSION_DRIVER=file
+CACHE_STORE=file
+QUEUE_CONNECTION=sync
+```
+
+Puedes generar `APP_KEY` localmente con:
+
+```bash
+php artisan key:generate --show
+```
+
+`Dockerfile.render` instala dependencias PHP, Composer, Node y npm; ejecuta `composer install --no-dev --optimize-autoloader`, `npm install` y `npm run build`; crea las carpetas necesarias de `storage` y `bootstrap/cache`; crea un SQLite temporal dentro de la imagen y ejecuta migraciones. Esto permite mostrar la landing page y la pantalla de login sin configurar PostgreSQL por ahora.
+
+Nota: el SQLite creado en la imagen no debe usarse como base de datos persistente. Para produccion real, configura PostgreSQL u otro servicio de base de datos persistente en Render.
+
+## Pruebas
+
+```bash
+php artisan test
+```
+
+O usando script de Composer:
+
+```bash
+composer test
+```
+
+## Flujo de ramas
+
+Este repositorio usa dos ramas principales:
+
+- `master`: version estable/final para despliegue
+- `developer`: integracion de cambios y actualizaciones
+
+Flujo sugerido:
+
+1. Crear feature branch desde `developer`
+2. Hacer merge de feature branch a `developer`
+3. Pasar a `master` cuando este validado para release
+
+## Comandos utiles
+
+- Limpiar cache de configuracion:
+
+```bash
+php artisan config:clear
+```
+
+- Reiniciar cache de aplicacion:
+
+```bash
+php artisan optimize:clear
+```
+
+- Ver rutas:
+
+```bash
+php artisan route:list
+```
+
+## Notas
+
+- `vendor/` y `node_modules/` no se versionan.
+- No subas credenciales reales en `.env`.
