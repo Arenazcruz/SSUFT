@@ -54,6 +54,12 @@
     <div class="my-7 border-t border-slate-200"></div>
 
     <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Acceso alternativo</p>
+    <div class="mt-4 rounded-2xl border border-orange-100 bg-orange-50/60 px-4 py-3 text-sm text-slate-600">
+        <p class="font-semibold text-slate-800">Cuenta demo docente</p>
+        <p class="mt-2 font-mono text-xs text-slate-700">docente.demo@unifranz.edu.bo</p>
+        <p class="mt-1 font-mono text-xs text-slate-700">Demo123456</p>
+    </div>
+
     <form action="{{ route('login.store') }}" method="POST" class="mt-4 space-y-5">
         @csrf
         <div>

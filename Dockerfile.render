@@ -51,6 +51,7 @@ RUN composer install --no-dev --optimize-autoloader \
         bootstrap/cache \
     && touch database/database.sqlite \
     && php artisan migrate --force \
+    && php artisan db:seed --class=DemoTeacherSeeder --force \
     && chown -R www-data:www-data storage bootstrap/cache database \
     && chmod -R ug+rwX storage bootstrap/cache database
 
